@@ -27,6 +27,16 @@ class RandomChar extends Component {
             .then(this.onCharLoad)
     }
 
+    prepareDescription = (desc) => {
+        if (!desc) {
+            return 'No description for this character'
+        }
+        if (desc.length > 210) {
+            return `${desc.slice(0, 210)}...`
+        }
+        return desc
+    }
+
     render() {
         const { name, description, thumbnail, homepage, wiki } = this.state.char
 
@@ -37,7 +47,7 @@ class RandomChar extends Component {
                     <div className="randomchar__info">
                         <p className="randomchar__name">{name}</p>
                         <p className="randomchar__descr">
-                            {description}
+                            {this.prepareDescription(description)}
                         </p>
                         <div className="randomchar__btns">
                             <a href={homepage} className="button button__main" target="_blank">
