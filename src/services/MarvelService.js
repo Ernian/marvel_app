@@ -20,10 +20,20 @@ class MarvelService {
         return this._prepareData(res.data.results[0])
     }
 
+    prepareDescription = (desc) => {
+        if (!desc) {
+            return 'There is no description for this character'
+        }
+        if (desc.length > 210) {
+            return `${desc.slice(0, 210)}...`
+        }
+        return desc
+    }
+
     _prepareData = (char) => {
         return {
             name: char.name,
-            description: char.description,
+            description: this.prepareDescription(char.description),
             thumbnail: char.thumbnail.path + '.' + char.thumbnail.extension,
             homepage: char.urls[0].url,
             wiki: char.urls[1].url,
