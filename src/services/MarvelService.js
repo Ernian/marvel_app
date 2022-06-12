@@ -20,7 +20,7 @@ class MarvelService {
         return this._prepareData(res.data.results[0])
     }
 
-    prepareDescription = (desc) => {
+    _prepareDescription = (desc) => {
         if (!desc) {
             return 'There is no description for this character'
         }
@@ -30,13 +30,18 @@ class MarvelService {
         return desc
     }
 
+    _checkImg = (path) => {
+        return path !== "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg"
+    }
+
     _prepareData = (char) => {
         return {
             name: char.name,
-            description: this.prepareDescription(char.description),
+            description: this._prepareDescription(char.description),
             thumbnail: char.thumbnail.path + '.' + char.thumbnail.extension,
             homepage: char.urls[0].url,
             wiki: char.urls[1].url,
+            hasImg: this._checkImg(char.thumbnail.path + '.' + char.thumbnail.extension)
         }
     }
 }
