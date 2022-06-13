@@ -36,6 +36,7 @@ class MarvelService {
 
     _prepareData = (char) => {
         return {
+            id: char.id,
             name: char.name,
             description: this._prepareDescription(char.description),
             thumbnail: char.thumbnail.path + '.' + char.thumbnail.extension,
