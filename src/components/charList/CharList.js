@@ -48,6 +48,7 @@ class CharList extends Component {
                 thumbnail={char.thumbnail}
                 hasImg={char.hasImg}
                 key={char.id}
+                onCharSelected={() => this.props.onCharSelected(char.id)}
             />
         })
     }
