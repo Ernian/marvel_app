@@ -114,13 +114,6 @@ const View = ({ char }) => {
             <div className="char__comics">Comics:</div>
             <ul className="char__comics-list">
                 {comics.length ? prepareListComics(comics) : 'There is no comics with this character'}
-                {/* {comics.map((el, i) => {
-                    return (
-                        <li className="char__comics-item" key={i}>
-                            {el.name}
-                        </li>
-                    )
-                })} */}
             </ul>
         </>
     )

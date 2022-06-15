@@ -3,9 +3,10 @@ import AppHeader from "../appHeader/AppHeader";
 import RandomChar from "../randomChar/RandomChar";
 import CharList from "../charList/CharList";
 import CharInfo from "../charInfo/CharInfo";
+import ErrorBoundary from "../errorBoundery/ErrorBoundary";
 
 import decoration from '../../resources/img/vision.png';
-import { render } from "@testing-library/react";
+// import { render } from "@testing-library/react";
 
 class App extends Component {
     state = {
@@ -28,9 +29,11 @@ class App extends Component {
                         <CharList
                             onCharSelected={this.onCharSelected}
                         />
-                        <CharInfo
-                            charId={this.state.selectedChar}
-                        />
+                        <ErrorBoundary>
+                            <CharInfo
+                                charId={this.state.selectedChar}
+                            />
+                        </ErrorBoundary>
                     </div>
                     <img className="bg-decoration" src={decoration} alt="vision" />
                 </main>
