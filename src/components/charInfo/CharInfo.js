@@ -76,7 +76,7 @@ const View = ({ char }) => {
 
     function prepareListComics(comics) {
         return comics.map((el, i) => {
-            if (i < 5) {
+            if (i < 10) {
                 return (
                     <li className="char__comics-item" key={i}>
                         {el.name}
