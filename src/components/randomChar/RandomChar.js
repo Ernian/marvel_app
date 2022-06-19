@@ -48,7 +48,12 @@ class RandomChar extends Component {
         const { char, loading, error } = this.state
         const errorBlock = error ? <ErrorBlock /> : null
         const spinner = loading ? <Spinner /> : null
-        const infoBlock = !(loading || error) ? <InfoBlock char={char} /> : null
+        const infoBlock = !(loading || error) ?
+            <InfoBlock
+                char={char}
+                onCharSelected={() => this.props.onCharSelected(char.id)}
+            />
+            : null
 
         return (
             <div className="randomchar">
@@ -76,7 +81,7 @@ class RandomChar extends Component {
     }
 }
 
-const InfoBlock = ({ char }) => {
+const InfoBlock = ({ char, onCharSelected }) => {
     const { name, description, thumbnail, homepage, wiki, hasImg } = char
 
     return (
@@ -86,6 +91,7 @@ const InfoBlock = ({ char }) => {
                 alt="Random character"
                 className="randomchar__img"
                 style={hasImg ? null : { objectFit: "contain" }}
+                onClick={onCharSelected}
             />
             <div className="randomchar__info">
                 <p className="randomchar__name">{name}</p>
