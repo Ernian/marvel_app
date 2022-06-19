@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import React from 'react';
 import CharCard from '../charCard/CharCard';
 import Spinner from '../spinner/Spinner';
 import ErrorBlock from '../errorBlock/ErrorBlock';
@@ -6,11 +6,10 @@ import MarvelService from '../../services/MarvelService';
 
 import './charList.scss';
 
-class CharList extends Component {
+class CharList extends React.Component {
     state = {
         charsList: [],
         loading: true,
-        newCharLoading: false,
         error: false,
         offset: 210,
         endOfChars: false,
@@ -19,16 +18,45 @@ class CharList extends Component {
     marvelService = new MarvelService
 
     componentDidMount() {
-        this.updateChars()
+        this.scrollLoading()
     }
 
-    updateChars = () => {
-        this.setState({ newCharLoading: true })
+    scrollLoading = () => {
+        const observer = new IntersectionObserver(
+            (entries, observer) => {
+                if (entries[0].isIntersecting) {
+                    this.updateChars()
+                }
+                if (this.state.endOfChars) {
+                    observer.unobserve(entries[0].target)
+                }
+            },
+            {
+                threshold: 1,
+            }
+        )
+
+        const lastChar = document.querySelector('#lastRow')
+        observer.observe(lastChar)
+    }
+
+    debounce = (callback, delay) => {
+        let timer
+        return function (...args) {
+            clearTimeout(timer)
+            timer = setTimeout(() => {
+                callback.apply(this, args)
+            }, delay)
+        }
+    }
+
+    updateChars = this.debounce(() => {
+        this.setState({ loading: true })
         this.marvelService
             .getAllCharacters(this.state.offset)
             .then(this.onLoadChars)
-            .catch(this.onError)
-    }
+            .catch(this.onError);
+    }, 500)
 
     onLoadChars = (characters) => {
         if (characters.length < 9) {
@@ -40,7 +68,6 @@ class CharList extends Component {
         this.setState(({ charsList, offset }) => ({
             charsList: charsList.concat(characters),
             loading: false,
-            newCharLoading: false,
             error: false,
             offset: offset + 9,
         }))
@@ -66,10 +93,10 @@ class CharList extends Component {
     }
 
     render() {
-        const { charsList, loading, error, newCharLoading, endOfChars } = this.state
+        const { charsList, loading, error } = this.state
         const spinner = loading ? <Spinner /> : null
         const errorBlock = error ? <ErrorBlock /> : null
-        const content = !(loading || error) ? this.prepareList(charsList) : null
+        const content = !error ? this.prepareList(charsList) : null
 
         return (
             <div className="char__list">
@@ -78,14 +105,11 @@ class CharList extends Component {
                 </ul>
                 {spinner}
                 {errorBlock}
-                <button
-                    className="button button__main button__long"
-                    disabled={newCharLoading}
-                    onClick={this.updateChars}
-                    style={{ 'display': endOfChars ? 'none' : 'block' }}
-                >
-                    <div className="inner">load more</div>
-                </button>
+                <div
+                    ref={this.lastRow}
+                    style={{ height: 20, marginTop: 150 }}
+                    id="lastRow"
+                />
             </div>
         )
     }

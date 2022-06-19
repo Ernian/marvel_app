@@ -6,7 +6,6 @@ import CharInfo from "../charInfo/CharInfo";
 import ErrorBoundary from "../errorBoundery/ErrorBoundary";
 
 import decoration from '../../resources/img/vision.png';
-// import { render } from "@testing-library/react";
 
 class App extends Component {
     state = {
