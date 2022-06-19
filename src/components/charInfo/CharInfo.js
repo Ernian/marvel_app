@@ -5,6 +5,8 @@ import Skeleton from '../skeleton/Skeleton';
 import MarvelService from '../../services/MarvelService';
 
 import './charInfo.scss';
+import decoration from '../../resources/img/vision.png';
+
 
 class CharInfo extends Component {
     state = {
@@ -66,6 +68,7 @@ class CharInfo extends Component {
                 {spinner}
                 {errorBlock}
                 {skeleton}
+                <img className="bg-decoration" src={decoration} alt="vision" />
             </div>
         )
     }

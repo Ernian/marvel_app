@@ -5,8 +5,6 @@ import CharList from "../charList/CharList";
 import CharInfo from "../charInfo/CharInfo";
 import ErrorBoundary from "../errorBoundery/ErrorBoundary";
 
-import decoration from '../../resources/img/vision.png';
-
 class App extends Component {
     state = {
         selectedChar: null,
@@ -34,7 +32,6 @@ class App extends Component {
                             />
                         </ErrorBoundary>
                     </div>
-                    <img className="bg-decoration" src={decoration} alt="vision" />
                 </main>
             </div>
         )
