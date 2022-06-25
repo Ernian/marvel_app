@@ -87,6 +87,8 @@ class CharList extends React.Component {
                 thumbnail={char.thumbnail}
                 hasImg={char.hasImg}
                 key={char.id}
+                id={char.id}
+                selectedChar={this.props.selectedChar}
                 onCharSelected={() => this.props.onCharSelected(char.id)}
             />
         })

@@ -1,8 +1,20 @@
 const CharCard = (props) => {
-    const { name, thumbnail, hasImg, onCharSelected } = props
+    const {
+        name,
+        thumbnail,
+        hasImg,
+        onCharSelected,
+        id,
+        selectedChar
+    } = props
+
+    let style = 'char__item'
+    if (id === selectedChar) {
+        style += ' char__item_selected'
+    }
 
     return (
-        <li className="char__item">
+        <li className={style}>
             <img
                 src={thumbnail}
                 alt={name}
