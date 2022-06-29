@@ -18,13 +18,15 @@ class CharList extends React.Component {
     marvelService = new MarvelService
 
     componentDidMount() {
+        this.updateChars()
         this.scrollLoading()
     }
 
     scrollLoading = () => {
+
         const observer = new IntersectionObserver(
             (entries, observer) => {
-                if (entries[0].isIntersecting) {
+                if (entries[0].isIntersecting && !this.state.loading) {
                     this.updateChars()
                 }
                 if (this.state.endOfChars) {
@@ -40,23 +42,13 @@ class CharList extends React.Component {
         observer.observe(lastChar)
     }
 
-    debounce = (callback, delay) => {
-        let timer
-        return function (...args) {
-            clearTimeout(timer)
-            timer = setTimeout(() => {
-                callback.apply(this, args)
-            }, delay)
-        }
-    }
-
-    updateChars = this.debounce(() => {
+    updateChars = () => {
         this.setState({ loading: true })
         this.marvelService
             .getAllCharacters(this.state.offset)
             .then(this.onLoadChars)
             .catch(this.onError);
-    }, 500)
+    }
 
     onLoadChars = (characters) => {
         if (characters.length < 9) {
