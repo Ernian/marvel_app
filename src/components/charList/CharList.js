@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect, useRef } from 'react';
 import CharCard from '../charCard/CharCard';
 import Spinner from '../spinner/Spinner';
 import ErrorBlock from '../errorBlock/ErrorBlock';
@@ -6,30 +6,33 @@ import MarvelService from '../../services/MarvelService';
 
 import './charList.scss';
 
-class CharList extends React.Component {
-    state = {
-        charsList: [],
-        loading: true,
-        error: false,
-        offset: 210,
-        endOfChars: false,
-    }
+const CharList = (props) => {
+    const [charsList, setCharList] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(false)
+    const [offset, setOffset] = useState(210)
+    const [endOfChars, setEndOfChars] = useState(false)
+    const lastR = useRef()
+    const observer = useRef()
 
-    marvelService = new MarvelService
+    const marvelService = new MarvelService
 
-    componentDidMount() {
-        this.updateChars()
-        this.scrollLoading()
-    }
+    useEffect(() => {
+        updateChars()
+    }, [])
 
-    scrollLoading = () => {
+    useEffect(() => {
+        scrollLoading()
+    }, [loading, offset, endOfChars])
 
-        const observer = new IntersectionObserver(
+    function scrollLoading() {
+        if (observer.current) observer.current.disconnect()
+        observer.current = new IntersectionObserver(
             (entries, observer) => {
-                if (entries[0].isIntersecting && !this.state.loading) {
-                    this.updateChars()
+                if (entries[0].isIntersecting && !loading) {
+                    updateChars()
                 }
-                if (this.state.endOfChars) {
+                if (endOfChars) {
                     observer.unobserve(entries[0].target)
                 }
             },
@@ -37,42 +40,34 @@ class CharList extends React.Component {
                 threshold: 1,
             }
         )
-
-        const lastChar = document.querySelector('#lastRow')
-        observer.observe(lastChar)
+        observer.current.observe(lastR.current)
     }
 
-    updateChars = () => {
-        this.setState({ loading: true })
-        this.marvelService
-            .getAllCharacters(this.state.offset)
-            .then(this.onLoadChars)
-            .catch(this.onError);
+    function updateChars() {
+        setLoading(true)
+        marvelService
+            .getAllCharacters(offset)
+            .then(onLoadChars)
+            .catch(onError);
     }
 
-    onLoadChars = (characters) => {
+    function onLoadChars(characters) {
         if (characters.length < 9) {
-            this.setState({
-                endOfChars: true
-            })
+            setEndOfChars(true)
         }
 
-        this.setState(({ charsList, offset }) => ({
-            charsList: charsList.concat(characters),
-            loading: false,
-            error: false,
-            offset: offset + 9,
-        }))
+        setCharList(charList => charList.concat(characters))
+        setLoading(false)
+        setError(false)
+        setOffset(offset => offset + 9)
     }
 
-    onError = () => {
-        this.setState({
-            error: true,
-            loading: false
-        })
+    function onError() {
+        setError(true)
+        setLoading(false)
     }
 
-    prepareList = (chars) => {
+    function prepareList(chars) {
         return chars.map(char => {
             return <CharCard
                 name={char.name}
@@ -80,33 +75,32 @@ class CharList extends React.Component {
                 hasImg={char.hasImg}
                 key={char.id}
                 id={char.id}
-                selectedChar={this.props.selectedChar}
-                onCharSelected={() => this.props.onCharSelected(char.id)}
+                selectedChar={props.selectedChar}
+                onCharSelected={() => props.onCharSelected(char.id)}
             />
         })
     }
 
-    render() {
-        const { charsList, loading, error } = this.state
-        const spinner = loading ? <Spinner /> : null
-        const errorBlock = error ? <ErrorBlock /> : null
-        const content = !error ? this.prepareList(charsList) : null
+    const spinner = loading && !endOfChars ? <Spinner /> : null
+    const errorBlock = error ? <ErrorBlock /> : null
+    const content = !error ? prepareList(charsList) : null
+    const endList = <h2 style={{ marginTop: 50 }}> There is no more characters...</h2 >
 
-        return (
-            <div className="char__list">
-                <ul className="char__grid">
-                    {content}
-                </ul>
-                {spinner}
-                {errorBlock}
-                <div
-                    ref={this.lastRow}
-                    style={{ height: 20, marginTop: 150 }}
-                    id="lastRow"
-                />
-            </div>
-        )
-    }
+    return (
+        <div className="char__list">
+            <ul className="char__grid">
+                {content}
+            </ul>
+            {endOfChars ? endList : null}
+            {spinner}
+            {errorBlock}
+            <div
+                ref={lastR}
+                style={{ height: 20, marginTop: 150 }}
+                id="lastRow"
+            />
+        </div>
+    )
 }
 
 export default CharList;

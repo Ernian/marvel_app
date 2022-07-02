@@ -1,46 +1,38 @@
-import { Component } from "react";
+import { useState } from "react";
 import AppHeader from "../appHeader/AppHeader";
 import RandomChar from "../randomChar/RandomChar";
 import CharList from "../charList/CharList";
 import CharInfo from "../charInfo/CharInfo";
 import ErrorBoundary from "../errorBoundery/ErrorBoundary";
 
-class App extends Component {
-    state = {
-        selectedChar: null,
+const App = () => {
+    const [selectedChar, setSelectedChar] = useState(null)
+
+    function onCharSelected(id) {
+        setSelectedChar(id)
     }
 
-    onCharSelected = (id) => {
-        this.setState({
-            selectedChar: id,
-        })
-    }
-
-    render() {
-        const { selectedChar } = this.state
-
-        return (
-            <div className="app">
-                <AppHeader />
-                <main>
-                    <RandomChar
-                        onCharSelected={this.onCharSelected}
+    return (
+        <div className="app">
+            <AppHeader />
+            <main>
+                <RandomChar
+                    onCharSelected={onCharSelected}
+                />
+                <div className="char__content">
+                    <CharList
+                        onCharSelected={onCharSelected}
+                        selectedChar={selectedChar}
                     />
-                    <div className="char__content">
-                        <CharList
-                            onCharSelected={this.onCharSelected}
-                            selectedChar={selectedChar}
+                    <ErrorBoundary>
+                        <CharInfo
+                            charId={selectedChar}
                         />
-                        <ErrorBoundary>
-                            <CharInfo
-                                charId={selectedChar}
-                            />
-                        </ErrorBoundary>
-                    </div>
-                </main>
-            </div>
-        )
-    }
+                    </ErrorBoundary>
+                </div>
+            </main>
+        </div>
+    )
 }
 
 export default App;

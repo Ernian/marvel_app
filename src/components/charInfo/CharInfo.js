@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import Spinner from '../spinner/Spinner';
 import ErrorBlock from '../errorBlock/ErrorBlock';
 import Skeleton from '../skeleton/Skeleton';
@@ -7,74 +7,56 @@ import MarvelService from '../../services/MarvelService';
 import './charInfo.scss';
 import decoration from '../../resources/img/vision.png';
 
+const CharInfo = (props) => {
+    const [char, setChar] = useState(null)
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState(false)
 
-class CharInfo extends Component {
-    state = {
-        char: null,
-        loading: false,
-        error: false,
+    useEffect(() => {
+        updateChar()
+    }, [props.charId])
+
+    const marvelService = new MarvelService
+
+    function updateChar() {
+        if (!props.charId) return
+        setLoading(true)
+        marvelService
+            .getCharacter(props.charId)
+            .then(onCharLoaded)
+            .catch(onError)
     }
 
-    componentDidMount() {
-        this.updateChar()
+    function onCharLoaded(char) {
+        setChar(char)
+        setLoading(false)
+        setError(false)
     }
 
-    componentDidUpdate(prevProps) {
-        if (this.props.charId !== prevProps.charId) {
-            this.updateChar()
-        }
+    function onError() {
+        setLoading(false)
+        setError(true)
     }
 
-    marvelService = new MarvelService
+    const spinner = loading ? <Spinner /> : null
+    const errorBlock = error ? <ErrorBlock /> : null
+    const content = !(loading || error || !char) ? <ListComics char={char} /> : null
+    const skeleton = content || spinner || errorBlock ? null : <Skeleton />
 
-    updateChar = () => {
-        const { charId } = this.props
-        if (!charId) return
+    return (
+        <div className="char__info">
+            {content}
+            {spinner}
+            {errorBlock}
+            {skeleton}
+            <img className="bg-decoration" src={decoration} alt="vision" />
+        </div>
+    )
 
-        this.setState({
-            loading: true
-        })
-        this.marvelService
-            .getCharacter(charId)
-            .then(this.onCharLoaded)
-            .catch(this.onError)
-    }
 
-    onCharLoaded = (char) => {
-        this.setState({
-            char,
-            loading: false,
-            error: false,
-        })
-    }
-
-    onError = () => {
-        this.setState({
-            loading: false,
-            error: true,
-        })
-    }
-
-    render() {
-        const { char, loading, error } = this.state
-        const spinner = loading ? <Spinner /> : null
-        const errorBlock = error ? <ErrorBlock /> : null
-        const content = !(loading || error || !char) ? <View char={char} /> : null
-        const skeleton = content || spinner || errorBlock ? null : <Skeleton />
-
-        return (
-            <div className="char__info">
-                {content}
-                {spinner}
-                {errorBlock}
-                {skeleton}
-                <img className="bg-decoration" src={decoration} alt="vision" />
-            </div>
-        )
-    }
 }
 
-const View = ({ char }) => {
+const ListComics = ({ char }) => {
     const { name, description, thumbnail, homepage, wiki, comics, hasImg } = char
 
     function prepareListComics(comics) {
@@ -89,7 +71,6 @@ const View = ({ char }) => {
             return null
         })
     }
-
 
     return (
         <>
