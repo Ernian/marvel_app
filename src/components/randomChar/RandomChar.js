@@ -29,6 +29,7 @@ const RandomChar = (props) => {
     function onCharLoad(char) {
         setChar(char)
         setLoading(false)
+        setError(false)
     }
 
     function onError() {
@@ -36,7 +37,7 @@ const RandomChar = (props) => {
         setLoading(false)
     }
 
-    const errorBlock = error ? <ErrorBlock /> : null
+    const errorBlock = error && !loading ? <ErrorBlock /> : null
     const spinner = loading ? <Spinner /> : null
     const infoBlock = !(loading || error) ?
         <InfoBlock
