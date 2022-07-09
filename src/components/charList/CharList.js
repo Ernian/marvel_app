@@ -3,6 +3,7 @@ import CharCard from '../charCard/CharCard';
 import Spinner from '../spinner/Spinner';
 import ErrorBlock from '../errorBlock/ErrorBlock';
 import useMarvelService from '../../services/MarvelService';
+import useScrollLoading from '../../hooks/useScrollLoading';
 
 import './charList.scss';
 
@@ -10,7 +11,7 @@ const CharList = (props) => {
     const [charsList, setCharList] = useState([])
     const [offset, setOffset] = useState(210)
     const [endOfChars, setEndOfChars] = useState(false)
-    const lastR = useRef()
+    const lastRow = useRef()
     const observer = useRef()
 
     const { loading, error, getAllCharacters } = useMarvelService()
@@ -23,23 +24,8 @@ const CharList = (props) => {
         scrollLoading()
     }, [loading, offset, endOfChars])
 
-    function scrollLoading() {
-        if (observer.current) observer.current.disconnect()
-        observer.current = new IntersectionObserver(
-            (entries, observer) => {
-                if (entries[0].isIntersecting && !loading) {
-                    updateChars()
-                }
-                if (endOfChars) {
-                    observer.unobserve(entries[0].target)
-                }
-            },
-            {
-                threshold: 1,
-            }
-        )
-        observer.current.observe(lastR.current)
-    }
+
+    const scrollLoading = useScrollLoading(observer, loading, updateChars, lastRow, endOfChars)
 
     function updateChars() {
         getAllCharacters(offset)
@@ -82,9 +68,8 @@ const CharList = (props) => {
             {spinner}
             {errorBlock}
             <div
-                ref={lastR}
+                ref={lastRow}
                 style={{ height: 20, marginTop: 150 }}
-                id="lastRow"
             />
         </div>
     )
