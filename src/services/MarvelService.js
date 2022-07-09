@@ -1,26 +1,22 @@
-class MarvelService {
-    _apiBase = 'https://gateway.marvel.com:443/v1/public/'
-    _apiKey = 'apikey=f927698dabd9d0ad847fe72c0af91640'
+import { useHttp } from "../hooks/http.hook"
 
-    getResource = async (url) => {
-        const res = await fetch(url)
-        if (!res.ok) {
-            throw new Error(`Could not fetch ${url}, status: ${res.status}`)
-        }
-        return await res.json()
+const useMarvelService = () => {
+    const { loading, request, error } = useHttp()
+    const _apiBase = 'https://gateway.marvel.com:443/v1/public/'
+    const _apiKey = 'apikey=f927698dabd9d0ad847fe72c0af91640'
+    const noImgUrl = 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg'
+
+    const getAllCharacters = async (offset = 210) => {
+        const response = await request(`${_apiBase}characters?limit=9&offset=${offset}&${_apiKey}`)
+        return response.data.results.map(_prepareData)
     }
 
-    getAllCharacters = async (offset = 210) => {
-        const res = await this.getResource(`${this._apiBase}characters?limit=9&offset=${offset}&${this._apiKey}`)
-        return res.data.results.map(this._prepareData)
+    const getCharacter = async (id) => {
+        const response = await request(`${_apiBase}characters/${id}?${_apiKey}`)
+        return _prepareData(response.data.results[0])
     }
 
-    getCharacter = async (id) => {
-        const res = await this.getResource(`${this._apiBase}characters/${id}?${this._apiKey}`)
-        return this._prepareData(res.data.results[0])
-    }
-
-    _prepareDescription = (desc) => {
+    const _prepareDescription = (desc) => {
         if (!desc) {
             return 'There is no description for this character'
         }
@@ -30,22 +26,24 @@ class MarvelService {
         return desc
     }
 
-    _checkImg = (path) => {
-        return path !== "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg"
+    const _checkImg = (url) => {
+        return url !== noImgUrl
     }
 
-    _prepareData = (char) => {
+    const _prepareData = (char) => {
         return {
             id: char.id,
             name: char.name,
-            description: this._prepareDescription(char.description),
-            thumbnail: char.thumbnail.path + '.' + char.thumbnail.extension,
+            description: _prepareDescription(char.description),
+            thumbnail: `${char.thumbnail.path}.${char.thumbnail.extension}`,
             homepage: char.urls[0].url,
             wiki: char.urls[1].url,
-            hasImg: this._checkImg(char.thumbnail.path + '.' + char.thumbnail.extension),
+            hasImg: _checkImg(`${char.thumbnail.path}.${char.thumbnail.extension}`),
             comics: char.comics.items,
         }
     }
+
+    return { loading, error, getAllCharacters, getCharacter }
 }
 
-export default MarvelService
+export default useMarvelService

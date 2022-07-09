@@ -2,40 +2,28 @@ import { useState, useEffect } from 'react';
 import Spinner from '../spinner/Spinner';
 import ErrorBlock from '../errorBlock/ErrorBlock';
 import Skeleton from '../skeleton/Skeleton';
-import MarvelService from '../../services/MarvelService';
+import useMarvelService from '../../services/MarvelService';
 
 import './charInfo.scss';
 import decoration from '../../resources/img/vision.png';
 
 const CharInfo = (props) => {
     const [char, setChar] = useState(null)
-    const [loading, setLoading] = useState(false)
-    const [error, setError] = useState(false)
 
     useEffect(() => {
         updateChar()
     }, [props.charId])
 
-    const marvelService = new MarvelService
+    const { loading, error, getCharacter } = useMarvelService()
 
     function updateChar() {
         if (!props.charId) return
-        setLoading(true)
-        marvelService
-            .getCharacter(props.charId)
+        getCharacter(props.charId)
             .then(onCharLoaded)
-            .catch(onError)
     }
 
     function onCharLoaded(char) {
         setChar(char)
-        setLoading(false)
-        setError(false)
-    }
-
-    function onError() {
-        setLoading(false)
-        setError(true)
     }
 
     const spinner = loading ? <Spinner /> : null

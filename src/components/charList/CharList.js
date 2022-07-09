@@ -2,20 +2,18 @@ import { useState, useEffect, useRef } from 'react';
 import CharCard from '../charCard/CharCard';
 import Spinner from '../spinner/Spinner';
 import ErrorBlock from '../errorBlock/ErrorBlock';
-import MarvelService from '../../services/MarvelService';
+import useMarvelService from '../../services/MarvelService';
 
 import './charList.scss';
 
 const CharList = (props) => {
     const [charsList, setCharList] = useState([])
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState(false)
     const [offset, setOffset] = useState(210)
     const [endOfChars, setEndOfChars] = useState(false)
     const lastR = useRef()
     const observer = useRef()
 
-    const marvelService = new MarvelService
+    const { loading, error, getAllCharacters } = useMarvelService()
 
     useEffect(() => {
         updateChars()
@@ -44,11 +42,8 @@ const CharList = (props) => {
     }
 
     function updateChars() {
-        setLoading(true)
-        marvelService
-            .getAllCharacters(offset)
+        getAllCharacters(offset)
             .then(onLoadChars)
-            .catch(onError);
     }
 
     function onLoadChars(characters) {
@@ -57,14 +52,7 @@ const CharList = (props) => {
         }
 
         setCharList(charList => charList.concat(characters))
-        setLoading(false)
-        setError(false)
         setOffset(offset => offset + 9)
-    }
-
-    function onError() {
-        setError(true)
-        setLoading(false)
     }
 
     function prepareList(chars) {
@@ -83,13 +71,12 @@ const CharList = (props) => {
 
     const spinner = loading && !endOfChars ? <Spinner /> : null
     const errorBlock = error ? <ErrorBlock /> : null
-    const content = !error ? prepareList(charsList) : null
     const endList = <h2 style={{ marginTop: 50 }}> There is no more characters...</h2 >
 
     return (
         <div className="char__list">
             <ul className="char__grid">
-                {content}
+                {prepareList(charsList)}
             </ul>
             {endOfChars ? endList : null}
             {spinner}
