@@ -1,43 +1,15 @@
-import { useState, useEffect, useRef } from 'react';
-import Spinner from '../spinner/Spinner';
-import ErrorBlock from '../errorBlock/ErrorBlock';
-import useMarvelService from '../../services/MarvelService';
-import useScrollLoading from '../../hooks/useScrollLoading';
+import useListItems from '../../hooks/useListItems';
 import ComicCard from '../comicCard/ComicCard';
 
 import './comicsList.scss';
 
 const ComicsList = () => {
-    const [comics, setComics] = useState([])
-    const [offset, setOffset] = useState(2000)
-    const [endOfComics, setEndOfComics] = useState(false)
-    const lastRow = useRef()
-    const observer = useRef()
-
-    const { loading, error, getData } = useMarvelService()
-
-    useEffect(() => {
-        updateComics()
-    }, [])
-
-    useEffect(() => {
-        scrollLoading()
-    }, [loading, offset, endOfComics])
-
-    const scrollLoading = useScrollLoading(observer, loading, updateComics, lastRow, endOfComics)
-
-    function updateComics() {
-        getData('comics', offset, 8)
-            .then(onLoadComics)
-    }
-
-    function onLoadComics(loadedComics) {
-        if (loadedComics.length < 8) {
-            setEndOfComics(true)
-        }
-        setComics(comics => comics.concat(loadedComics))
-        setOffset(offset => offset + 8)
-    }
+    const { list,
+        endOfList,
+        spinner,
+        errorBlock,
+        endList,
+        lastRow } = useListItems('comics', 2000, 8)
 
     function prepareList(comics) {
         return comics.map(comic => {
@@ -50,16 +22,12 @@ const ComicsList = () => {
         })
     }
 
-    const spinner = loading && !endOfComics ? <Spinner /> : null
-    const errorBlock = error ? <ErrorBlock /> : null
-    const endList = <h2 style={{ marginTop: 50 }}> There is no more comics...</h2 >
-
     return (
         <div className="comics__list">
             <ul className="comics__grid">
-                {prepareList(comics)}
+                {prepareList(list)}
             </ul>
-            {endOfComics ? endList : null}
+            {endOfList ? endList : null}
             {spinner}
             {errorBlock}
             <div

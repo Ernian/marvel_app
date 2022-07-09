@@ -17,9 +17,9 @@ const App = () => {
     return (
         <div className="app">
             <AppHeader />
-            <AppBanner />
-            <ComicsList />
-            {/* <main>
+            {/* <AppBanner />
+            <ComicsList /> */}
+            <main>
                 <ErrorBoundary>
                     <RandomChar
                         onCharSelected={onCharSelected}
@@ -38,7 +38,7 @@ const App = () => {
                         />
                     </ErrorBoundary>
                 </div>
-            </main> */}
+            </main>
 
         </div>
     )
