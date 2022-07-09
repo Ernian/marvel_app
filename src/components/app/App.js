@@ -4,6 +4,8 @@ import RandomChar from "../randomChar/RandomChar";
 import CharList from "../charList/CharList";
 import CharInfo from "../charInfo/CharInfo";
 import ErrorBoundary from "../errorBoundery/ErrorBoundary";
+import AppBanner from "../appBanner/AppBanner";
+import ComicsList from "../comicsList/ComicsList";
 
 const App = () => {
     const [selectedChar, setSelectedChar] = useState(null)
@@ -15,7 +17,9 @@ const App = () => {
     return (
         <div className="app">
             <AppHeader />
-            <main>
+            <AppBanner />
+            <ComicsList />
+            {/* <main>
                 <ErrorBoundary>
                     <RandomChar
                         onCharSelected={onCharSelected}
@@ -34,7 +38,8 @@ const App = () => {
                         />
                     </ErrorBoundary>
                 </div>
-            </main>
+            </main> */}
+
         </div>
     )
 }

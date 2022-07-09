@@ -16,6 +16,11 @@ const useMarvelService = () => {
         return _prepareData(response.data.results[0])
     }
 
+    const getComics = async (offset = 1) => {
+        const response = await request(`${_apiBase}comics?limit=8&offset=${offset}&${_apiKey}`)
+        return response.data.results.map(_prepareData)
+    }
+
     const _prepareDescription = (desc) => {
         if (!desc) {
             return 'There is no description for this character'
@@ -30,20 +35,22 @@ const useMarvelService = () => {
         return url !== noImgUrl
     }
 
-    const _prepareData = (char) => {
+    const _prepareData = (item) => {
         return {
-            id: char.id,
-            name: char.name,
-            description: _prepareDescription(char.description),
-            thumbnail: `${char.thumbnail.path}.${char.thumbnail.extension}`,
-            homepage: char.urls[0].url,
-            wiki: char.urls[1].url,
-            hasImg: _checkImg(`${char.thumbnail.path}.${char.thumbnail.extension}`),
-            comics: char.comics.items,
+            id: item.id,
+            name: item.name,
+            description: _prepareDescription(item.description),
+            thumbnail: `${item.thumbnail.path}.${item.thumbnail.extension}`,
+            homepage: item.urls[0]?.url,
+            wiki: item.urls[1]?.url,
+            hasImg: _checkImg(`${item.thumbnail.path}.${item.thumbnail.extension}`),
+            comics: item.comics?.items,
+            title: item?.title,
+            price: (item.prices ? item.prices[0].price : null),
         }
     }
 
-    return { loading, error, getAllCharacters, getCharacter }
+    return { loading, error, getAllCharacters, getCharacter, getComics }
 }
 
 export default useMarvelService
