@@ -6,19 +6,14 @@ const useMarvelService = () => {
     const _apiKey = 'apikey=f927698dabd9d0ad847fe72c0af91640'
     const noImgUrl = 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg'
 
-    const getAllCharacters = async (offset = 210) => {
-        const response = await request(`${_apiBase}characters?limit=9&offset=${offset}&${_apiKey}`)
+    const getData = async (section, offset, limit) => {
+        const response = await request(`${_apiBase}${section}?limit=${limit}&offset=${offset}&${_apiKey}`)
         return response.data.results.map(_prepareData)
     }
 
     const getCharacter = async (id) => {
         const response = await request(`${_apiBase}characters/${id}?${_apiKey}`)
         return _prepareData(response.data.results[0])
-    }
-
-    const getComics = async (offset = 1) => {
-        const response = await request(`${_apiBase}comics?limit=8&offset=${offset}&${_apiKey}`)
-        return response.data.results.map(_prepareData)
     }
 
     const _prepareDescription = (desc) => {
@@ -50,7 +45,7 @@ const useMarvelService = () => {
         }
     }
 
-    return { loading, error, getAllCharacters, getCharacter, getComics }
+    return { loading, error, getData, getCharacter }
 }
 
 export default useMarvelService

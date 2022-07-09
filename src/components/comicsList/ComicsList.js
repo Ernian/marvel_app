@@ -14,7 +14,7 @@ const ComicsList = () => {
     const lastRow = useRef()
     const observer = useRef()
 
-    const { loading, error, getComics } = useMarvelService()
+    const { loading, error, getData } = useMarvelService()
 
     useEffect(() => {
         updateComics()
@@ -27,7 +27,7 @@ const ComicsList = () => {
     const scrollLoading = useScrollLoading(observer, loading, updateComics, lastRow, endOfComics)
 
     function updateComics() {
-        getComics(offset)
+        getData('comics', offset, 8)
             .then(onLoadComics)
     }
 

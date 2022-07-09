@@ -14,7 +14,7 @@ const CharList = (props) => {
     const lastRow = useRef()
     const observer = useRef()
 
-    const { loading, error, getAllCharacters } = useMarvelService()
+    const { loading, error, getData } = useMarvelService()
 
     useEffect(() => {
         updateChars()
@@ -28,7 +28,7 @@ const CharList = (props) => {
     const scrollLoading = useScrollLoading(observer, loading, updateChars, lastRow, endOfChars)
 
     function updateChars() {
-        getAllCharacters(offset)
+        getData('characters', offset, 9)
             .then(onLoadChars)
     }
 
