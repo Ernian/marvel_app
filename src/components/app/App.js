@@ -1,46 +1,24 @@
-import { useState } from "react";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import AppHeader from "../appHeader/AppHeader";
-import RandomChar from "../randomChar/RandomChar";
-import CharList from "../charList/CharList";
-import CharInfo from "../charInfo/CharInfo";
-import ErrorBoundary from "../errorBoundery/ErrorBoundary";
-import AppBanner from "../appBanner/AppBanner";
-import ComicsList from "../comicsList/ComicsList";
+import { MainPage, ComicsPage } from '../pages/'
 
 const App = () => {
-    const [selectedChar, setSelectedChar] = useState(null)
-
-    function onCharSelected(id) {
-        setSelectedChar(id)
-    }
-
     return (
-        <div className="app">
-            <AppHeader />
-            {/* <AppBanner />
-            <ComicsList /> */}
-            <main>
-                <ErrorBoundary>
-                    <RandomChar
-                        onCharSelected={onCharSelected}
-                    />
-                </ErrorBoundary>
-                <div className="char__content">
-                    <ErrorBoundary>
-                        <CharList
-                            onCharSelected={onCharSelected}
-                            selectedChar={selectedChar}
-                        />
-                    </ErrorBoundary>
-                    <ErrorBoundary>
-                        <CharInfo
-                            charId={selectedChar}
-                        />
-                    </ErrorBoundary>
-                </div>
-            </main>
-
-        </div>
+        <BrowserRouter>
+            <div className="app">
+                <AppHeader />
+                <main>
+                    <Switch>
+                        <Route exact path="/">
+                            <MainPage />
+                        </Route>
+                        <Route exact path="/comics">
+                            <ComicsPage />
+                        </Route>
+                    </Switch>
+                </main>
+            </div>
+        </BrowserRouter>
     )
 }
 
