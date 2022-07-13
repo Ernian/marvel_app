@@ -14,11 +14,11 @@ const CharInfo = (props) => {
         updateChar()
     }, [props.charId])
 
-    const { loading, error, getCharacter } = useMarvelService()
+    const { loading, error, getItem } = useMarvelService()
 
     function updateChar() {
         if (!props.charId) return
-        getCharacter(props.charId)
+        getItem('characters', props.charId)
             .then(onCharLoaded)
     }
 
