@@ -6,7 +6,7 @@ const useMarvelService = () => {
     const _apiKey = 'apikey=f927698dabd9d0ad847fe72c0af91640'
     const noImgUrl = 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg'
 
-    const getData = async (section, offset, limit) => {
+    const getListItems = async (section, offset, limit) => {
         const response = await request(`${_apiBase}${section}?limit=${limit}&offset=${offset}&${_apiKey}`)
         return response.data.results.map(_prepareData)
     }
@@ -45,7 +45,7 @@ const useMarvelService = () => {
         }
     }
 
-    return { loading, error, getData, getCharacter }
+    return { loading, error, getListItems, getCharacter }
 }
 
 export default useMarvelService

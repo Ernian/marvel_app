@@ -11,7 +11,7 @@ const useListItems = (section, offsetList, limit) => {
     const lastRow = useRef()
     const observer = useRef()
 
-    const { loading, error, getData } = useMarvelService()
+    const { loading, error, getListItems } = useMarvelService()
 
     useEffect(() => {
         updateList()
@@ -24,7 +24,7 @@ const useListItems = (section, offsetList, limit) => {
     const scrollLoading = useScrollLoading(observer, loading, updateList, lastRow, endOfList)
 
     function updateList() {
-        getData(section, offset, limit)
+        getListItems(section, offset, limit)
             .then(onLoadItems)
     }
 
