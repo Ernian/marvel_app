@@ -1,38 +1,21 @@
-import { useState, useEffect } from 'react';
-import Spinner from '../spinner/Spinner';
-import ErrorBlock from '../errorBlock/ErrorBlock';
-import useMarvelService from '../../services/MarvelService';
+import useItem from '../../hooks/useItem'
 
 import './randomChar.scss';
 import mjolnir from '../../resources/img/mjolnir.png';
 
 const RandomChar = (props) => {
-    const [char, setChar] = useState({})
-    const { loading, error, getItem } = useMarvelService()
+    const {
+        item,
+        spinner,
+        errorBlock,
+        updateItem } = useItem('random', 'characters', null)
 
-    useEffect(() => {
-        updateChar()
-    }, [])
-
-    function updateChar() {
-        const id = Math.floor(Math.random() * 400 + 1011000)
-        getItem('characters', id)
-            .then(onCharLoad)
-    }
-
-    function onCharLoad(char) {
-        setChar(char)
-    }
-
-    const errorBlock = error && !loading ? <ErrorBlock /> : null
-    const spinner = loading ? <Spinner /> : null
-    const infoBlock = !(loading || error) ?
+    const infoBlock = !(spinner || errorBlock || !item) ?
         <InfoBlock
-            char={char}
-            onCharSelected={() => props.onCharSelected(char.id)}
+            char={item}
+            onCharSelected={() => props.onCharSelected(item.id)}
         />
         : null
-
     return (
         <div className="randomchar">
             {spinner}
@@ -48,7 +31,7 @@ const RandomChar = (props) => {
                 </p>
                 <button
                     className="button button__main"
-                    onClick={updateChar}
+                    onClick={updateItem}
                 >
                     <div className="inner">try it</div>
                 </button>

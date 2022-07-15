@@ -1,34 +1,16 @@
-import { useState, useEffect } from 'react';
-import Spinner from '../spinner/Spinner';
-import ErrorBlock from '../errorBlock/ErrorBlock';
+import useItem from '../../hooks/useItem'
 import Skeleton from '../skeleton/Skeleton';
-import useMarvelService from '../../services/MarvelService';
 
 import './charInfo.scss';
 import decoration from '../../resources/img/vision.png';
 
 const CharInfo = (props) => {
-    const [char, setChar] = useState(null)
+    const {
+        item,
+        spinner,
+        errorBlock } = useItem('info', 'characters', props.charId)
 
-    useEffect(() => {
-        updateChar()
-    }, [props.charId])
-
-    const { loading, error, getItem } = useMarvelService()
-
-    function updateChar() {
-        if (!props.charId) return
-        getItem('characters', props.charId)
-            .then(onCharLoaded)
-    }
-
-    function onCharLoaded(char) {
-        setChar(char)
-    }
-
-    const spinner = loading ? <Spinner /> : null
-    const errorBlock = error ? <ErrorBlock /> : null
-    const content = !(loading || error || !char) ? <ListComics char={char} /> : null
+    const content = !(spinner || errorBlock || !item) ? <ListComics char={item} /> : null
     const skeleton = content || spinner || errorBlock ? null : <Skeleton />
 
     return (
@@ -40,8 +22,6 @@ const CharInfo = (props) => {
             <img className="bg-decoration" src={decoration} alt="vision" />
         </div>
     )
-
-
 }
 
 const ListComics = ({ char }) => {
