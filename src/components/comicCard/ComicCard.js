@@ -1,12 +1,14 @@
-const ComicCard = ({ img, title, price }) => {
+import { Link } from "react-router-dom"
+
+const ComicCard = ({ img, title, price, id }) => {
     return (
         <li className="comics__item">
-            <a href="#">
+            <Link to={`${id}`}>
                 <img src={img} alt="ultimate war" className="comics__item-img" />
                 <div className="comics__item-name">{title}</div>
                 <div className="comics__item-price">{price}$</div>
-            </a>
-        </li>
+            </Link>
+        </li >
     )
 }
 

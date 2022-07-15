@@ -15,6 +15,7 @@ const ComicsList = () => {
         return comics.map(comic => {
             return <ComicCard
                 key={comic.id}
+                id={comic.id}
                 title={comic.title}
                 img={comic.thumbnail}
                 price={comic.price}
