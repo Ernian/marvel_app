@@ -25,6 +25,8 @@ const SingleComic = () => {
     return (
         <>
             {comic}
+            {spinner}
+            {errorBlock}
         </>
     )
 }
