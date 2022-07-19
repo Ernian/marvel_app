@@ -60,6 +60,24 @@ main {
     position: relative;
 }
 
+.item-enter {
+    transform: translateX(-900px);
+}
+
+.item-enter-active {
+    transform: translateX(0px);
+    transition: all 500ms ease-in;
+}
+
+.item-exit {
+    opacity: 1;
+}
+
+.item-exit-active {
+    transform: translateX(-300px);
+    transition: all 500ms ease-in;
+}
+
 .pulse {
     animation: pulse 1.5s ease-in-out .5s infinite
 }

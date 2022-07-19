@@ -1,3 +1,4 @@
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import useListItems from '../../hooks/useListItems';
 import CharCard from '../charCard/CharCard';
 
@@ -12,17 +13,29 @@ const CharList = (props) => {
         lastRow } = useListItems('characters', 210, 9)
 
     function prepareList(chars) {
-        return chars.map(char => {
-            return <CharCard
-                name={char.name}
-                thumbnail={char.thumbnail}
-                hasImg={char.hasImg}
-                key={char.id}
-                id={char.id}
-                selectedChar={props.selectedChar}
-                onCharSelected={() => props.onCharSelected(char.id)}
-            />
-        })
+        return (
+            <TransitionGroup className="char__grid">
+                {chars.map(char => {
+                    return (
+                        <CSSTransition
+                            key={char.id}
+                            timeout={500}
+                            classNames="item"
+                        >
+                            <CharCard
+                                name={char.name}
+                                thumbnail={char.thumbnail}
+                                hasImg={char.hasImg}
+
+                                id={char.id}
+                                selectedChar={props.selectedChar}
+                                onCharSelected={() => props.onCharSelected(char.id)}
+                            />
+                        </CSSTransition>
+                    )
+                })}
+            </TransitionGroup>
+        )
     }
 
     return (

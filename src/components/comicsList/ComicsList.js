@@ -1,3 +1,4 @@
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import useListItems from '../../hooks/useListItems';
 import ComicCard from '../comicCard/ComicCard';
 
@@ -12,20 +13,31 @@ const ComicsList = () => {
         lastRow } = useListItems('comics', 2000, 8)
 
     function prepareList(comics) {
-        return comics.map(comic => {
-            return <ComicCard
-                key={comic.id}
-                id={comic.id}
-                title={comic.title}
-                img={comic.thumbnail}
-                price={comic.price}
-            />
-        })
+        return (
+            <TransitionGroup className="comics__grid">
+                {comics.map(comic => {
+                    return (
+                        <CSSTransition
+                            key={comic.id}
+                            timeout={500}
+                            classNames="item"
+                        >
+                            <ComicCard
+                                id={comic.id}
+                                title={comic.title}
+                                img={comic.thumbnail}
+                                price={comic.price}
+                            />
+                        </CSSTransition>
+                    )
+                })}
+            </TransitionGroup>
+        )
     }
 
     return (
         <div className="comics__list">
-            <ul className="comics__grid">
+            <ul>
                 {prepareList(list)}
             </ul>
             {endOfList ? endList : null}
