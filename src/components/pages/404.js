@@ -3,7 +3,7 @@ import ErrorBlock from "../errorBlock/ErrorBlock"
 const Page404 = () => {
     return (
         <>
-            <h2>Page dosn`t exist...</h2>
+            <h2>Page doesn`t exist...</h2>
             <ErrorBlock />
         </>
     )
