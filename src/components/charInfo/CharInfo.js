@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import useItem from '../../hooks/useItem'
 import Skeleton from '../skeleton/Skeleton';
 
@@ -25,14 +26,23 @@ const CharInfo = (props) => {
 }
 
 const ListComics = ({ char }) => {
-    const { name, description, thumbnail, homepage, wiki, comics, hasImg } = char
+    const {
+        name,
+        description,
+        thumbnail,
+        homepage,
+        wiki,
+        comics,
+        hasImg
+    } = char
 
     function prepareListComics(comics) {
         return comics.map((el, i) => {
-            if (i < 10) {
+            if (i < 5) {
+                const comicId = el['resourceURI'].slice(-5)
                 return (
                     <li className="char__comics-item" key={i}>
-                        {el.name}
+                        <Link to={`comics/${comicId}`}>{el.name}</Link>
                     </li>
                 )
             }
@@ -51,10 +61,10 @@ const ListComics = ({ char }) => {
                 <div>
                     <div className="char__info-name">{name}</div>
                     <div className="char__btns">
-                        <a href={homepage} className="button button__main">
+                        <a href={homepage} target="_blank" rel="noreferrer" className="button button__main">
                             <div className="inner">homepage</div>
                         </a>
-                        <a href={wiki} className="button button__secondary">
+                        <a href={wiki} target="_blank" rel="noreferrer" className="button button__secondary">
                             <div className="inner">Wiki</div>
                         </a>
                     </div>
