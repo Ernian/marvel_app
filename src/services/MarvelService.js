@@ -16,6 +16,11 @@ const useMarvelService = () => {
         return _prepareData(response.data.results[0])
     }
 
+    const getCharacterByName = async (name) => {
+        const response = await request(`${_apiBase}characters?name=${name}&limit=1&${_apiKey}`);
+        return response.data.results.map(_prepareData);
+    }
+
     const _prepareDescription = (desc) => {
         if (!desc) {
             return 'There is no description for this character'
@@ -47,7 +52,7 @@ const useMarvelService = () => {
         }
     }
 
-    return { loading, error, getListItems, getItem }
+    return { loading, error, getListItems, getItem, getCharacterByName }
 }
 
 export default useMarvelService

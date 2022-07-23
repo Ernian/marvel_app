@@ -7,10 +7,6 @@
         z-index: 5;
         background-color: #fff;
 
-        position: sticky;
-        top: 10px;
-        margin-left: 10px;
-
         &-name {
             font-weight: bold;
             font-size: 22px;
@@ -24,7 +20,7 @@
 
         .bg-decoration {
             display: block;
-            top: 600px;
+            top: 640px;
             position: absolute;
             right: -150px;
             z-index: -1;

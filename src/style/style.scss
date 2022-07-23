@@ -60,6 +60,12 @@ main {
     position: relative;
 }
 
+.sticky {
+    position: sticky;
+    top: 10px;
+    margin-left: 10px;
+}
+
 .item-enter {
     transform: translateX(-900px);
 }

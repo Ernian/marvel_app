@@ -39,7 +39,7 @@ const ListComics = ({ char }) => {
     function prepareListComics(comics) {
         return comics.map((el, i) => {
             if (i < 5) {
-                const comicId = el['resourceURI'].slice(-5)
+                const comicId = el['resourceURI'].split('/').pop()
                 return (
                     <li className="char__comics-item" key={i}>
                         <Link to={`comics/${comicId}`}>{el.name}</Link>
