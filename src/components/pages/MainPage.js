@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Helmet } from "react-helmet";
 import RandomChar from "../randomChar/RandomChar";
 import CharList from "../charList/CharList";
 import CharInfo from "../charInfo/CharInfo";
@@ -14,6 +15,17 @@ const MainPage = () => {
 
     return (
         <>
+            <Helmet>
+                <meta
+                    name="description"
+                    content="Page with marvel comics"
+                />
+                <meta
+                    name="keywords"
+                    content="Marvel, comics"
+                />
+                <title>Marvel information portal</title>
+            </Helmet>
             <ErrorBoundary>
                 <RandomChar
                     onCharSelected={onCharSelected}
